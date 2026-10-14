@@ -1,0 +1,88 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile containing bankroll and settings",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "bankroll": {
+          "type": "object",
+          "properties": {
+            "balance": { "type": "number" },
+            "initialBalance": { "type": "number" },
+            "lockedBalance": { "type": "number" },
+            "currency": { "type": "string" },
+            "savingsGoal": { "type": "number" },
+            "dailyTargetOdd": { "type": "number" },
+            "maxTicketsPerDay": { "type": "number" },
+            "riskProfile": { "type": "string" },
+            "adaptiveMode": { "type": "boolean" },
+            "balanceHistory": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "timestamp": { "type": "number" },
+                  "balance": { "type": "number" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": ["uid", "bankroll"]
+    },
+    "AnalysisResult": {
+      "title": "AnalysisResult",
+      "description": "A single match analysis result",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "type": "number" },
+        "userId": { "type": "string" },
+        "sport": { "type": "string" },
+        "match": { "type": "object" },
+        "predictions": { "type": "array" },
+        "quantitativeData": { "type": "object" },
+        "recentMatches": { "type": "object" },
+        "summary": { "type": "string" }
+      },
+      "required": ["id", "timestamp", "match"]
+    },
+    "Bet": {
+      "title": "Bet",
+      "description": "A single bet placed by the user",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "matchId": { "type": "string" },
+        "matchName": { "type": "string" },
+        "prediction": { "type": "string" },
+        "odd": { "type": "number" },
+        "stake": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "won", "lost"] },
+        "timestamp": { "type": "number" },
+        "sport": { "type": "string" },
+        "isCombined": { "type": "boolean" },
+        "score": { "type": "string" }
+      },
+      "required": ["id", "matchName", "prediction", "odd", "stake", "status", "timestamp", "userId"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile and bankroll settings. Note: 'bets' array is removed in favor of subcollection."
+    },
+    "/users/{userId}/history/{analysisId}": {
+      "schema": "AnalysisResult",
+      "description": "History of match analyses"
+    },
+    "/users/{userId}/bets/{betId}": {
+      "schema": "Bet",
+      "description": "History of bets"
+    }
+  }
+}

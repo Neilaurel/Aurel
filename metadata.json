@@ -1,0 +1,6 @@
+{
+  "name": "1207Remix: PredictMaster AI 2026",
+  "description": "Système expert d\u0027analyse de matchs et pronostics sportifs en temps réel (Football \u0026 Basketball).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

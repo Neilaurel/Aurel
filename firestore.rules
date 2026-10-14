@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Catch-all deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Main user logic
+    match /users/{userId} {
+      // Allow read/write if the user is the owner OR if they are the admin email
+      allow read, write: if request.auth != null && (
+        request.auth.uid == userId ||
+        request.auth.token.email == "aurelbayeniagoua@gmail.com"
+      );
+
+      // Recursive match for all subcollections (history, bets)
+      match /{allSubcollections=**} {
+        allow read, write: if request.auth != null && (
+          request.auth.uid == userId ||
+          request.auth.token.email == "aurelbayeniagoua@gmail.com"
+        );
+      }
+    }
+
+    // Allow testing connection
+    match /test/connection {
+      allow read: if request.auth != null;
+    }
+  }
+}
